@@ -5,7 +5,7 @@ class Question(models.Model):
     content = models.TextField()
     create_date = models.DateTimeField()
 
-    def __str__(self):
+    def __str__(self): # id 대신 제목을 표시하기 위해
         return self.subject
 
 class Answer(models.Model):
