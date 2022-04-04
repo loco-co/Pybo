@@ -40,4 +40,9 @@ urlpatterns = [
          comment_views.comment_modify_answer, name='comment_modify_answer'),
     path('comment/delete/answer/<int:comment_id>/',
          comment_views.comment_delete_answer, name='comment_delete_answer'),
+
+    path('question/vote/<int:question_id>/',
+         question_views.question_vote, name='question_vote'),
+    path('answer/vote/<int:answer_id>/',
+         answer_views.answer_vote, name='answer_vote'),
 ]
