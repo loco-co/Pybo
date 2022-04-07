@@ -115,3 +115,21 @@ def comment_delete_answer(request, comment_id):
     else:
         comment.delete()
     return redirect('pybo:detail', question_id=comment.answer.question.id)
+
+@login_required(login_url='common:login')
+def comment_vote_question(request, comment_id):
+    comment = get_object_or_404(Comment, pk=comment_id)
+    if request.user == comment.author:
+        messages.error(request, '본인이 작성한 댓글은 추천할 수 없습니다')
+    else:
+        comment.voter.add(request.user)
+    return redirect('pybo:detail', question_id=comment.question_id)
+
+@login_required(login_url='common:login')
+def comment_vote_answer(request, comment_id):
+    comment = get_object_or_404(Comment, pk=comment_id)
+    if request.user == comment.author:
+        messages.error(request, '본인이 작성한 댓글은 추천할 수 없습니다')
+    else:
+        comment.voter.add(request.user)
+    return redirect('pybo:detail', question_id=comment.answer.question_id)

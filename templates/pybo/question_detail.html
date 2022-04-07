@@ -50,6 +50,9 @@
                         (수정:{{ comment.modify_date }})
                         {% endif %}
                     </span>
+                    <span class="badge">+{{ comment.voter.count }}</span>
+                    <a href="javascript:void(0)" data-uri="{% url 'pybo:comment_vote_question' comment.id %}"
+                    class="recommend badge">추천</a>
                     {% if request.user == comment.author %}
                     <a href="{% url 'pybo:comment_modify_question' comment.id %}" class="small">수정</a>,
                     <a href="#" class="small delete"
@@ -85,8 +88,8 @@
             </div>
             <div class="my-3">
                 <a href="javascript:void(0)" data-uri="{% url 'pybo:answer_vote' answer.id %}"
-               class="recommend btn btn-sm btn-outline-secondary"> 추천
-                <span class="badge rounded-pill">{{answer.voter.count}}</span></a>
+               class="recommend btn btn-sm btn-outline-secondary">추천
+                <span class="badge rounded-pill">{{ answer.voter.count }}</span></a>
                 {% if request.user == answer.author %}
                 <a href="{% url 'pybo:answer_modify' answer.id %}"
                    class="btn btn-sm btn-outline-secondary">수정</a>
@@ -105,6 +108,9 @@
                             (수정:{{ comment.modify_date }})
                             {% endif %}
                         </span>
+                        <span class="badge rounded-pill">+{{ comment.voter.count }}</span>
+                        <a href="javascript:void(0)" data-uri="{% url 'pybo:comment_vote_answer' comment.id %}"
+                            class="recommend badge">추천</a>
                         {% if request.user == comment.author %}
                         <a href="{% url 'pybo:comment_modify_answer' comment.id %}" class="small">수정</a>,
                         <a href="#" class="small delete"
