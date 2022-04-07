@@ -64,7 +64,7 @@
             {% endif %}
             <div>
                 <a href="{% url 'pybo:comment_create_question' question.id %}"
-                   class="small"><small>댓글 추가 ..</small></a> <!-- 댓글 추가 링크 -->
+                   class="small" style="text-decoration: none;"><small>댓글 추가 ..</small></a> <!-- 댓글 추가 링크 -->
             </div>
             <!-- 질문 댓글 End -->
         </div>
@@ -122,7 +122,7 @@
             {% endif %}
             <div>
                 <a href="{% url 'pybo:comment_create_answer' answer.id %}"
-                   class="small"><small>댓글 추가 ..</small></a>
+                   class="small" style="text-decoration: none;"><small>댓글 추가 ..</small></a>
             </div>
         </div>
     </div>
@@ -143,7 +143,7 @@
             <textarea {% if not user.is_authenticated %}disabled{% endif %}
                       name="content" id="content" class="form-control" rows="10"></textarea>
         </div>
-        <input type="submit" value="답변등록" class="btn btn-primary">
+        <input type="submit" value="답변등록" class="btn common_btn">
     </form>
 </div>
 {% endblock %}
@@ -164,5 +164,6 @@ Array.from(recommend_elements).map((element) => {
         };
     });
 });
+
 </script>
 {% endblock %}

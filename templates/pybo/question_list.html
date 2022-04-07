@@ -5,10 +5,10 @@
     <table class="table">
         <thead>
         <tr class="text-center table-success">
-            <th>번호</th>
+            <th class="table_name">번호</th>
             <th style="width:50%">제목</th>
-            <th>글쓴이</th>
-            <th>작성일시</th>
+            <th class="table_name">글쓴이</th>
+            <th class="table_name">작성일시</th>
         </tr>
         </thead>
         <tbody>
@@ -19,14 +19,14 @@
                 <!-- 번호 = 전체건수 - 시작인덱스 - 현재인덱스 + 1 -->
                 {{ question_list.paginator.count|sub:question_list.start_index|sub:forloop.counter0|add:1 }}
             </td>
-            <td class="text-left">
-                <a href="{% url 'pybo:detail' question.id %}">{{ question.subject }}</a>
+            <td class="text-left table_name">
+                <a href="{% url 'pybo:detail' question.id %}" style="text-decoration: none; color: black;">{{ question.subject }}</a>
                 {% if question.answer_set.count > 0 %}
                 <span class="text-danger small ml-2">{{ question.answer_set.count }}</span>
                 {% endif %}
             </td>
             <td>{{ question.author.username }}</td>
-            <td>{{ question.create_date }}</td>
+            <td style="white-space: nowrap;">{{ question.create_date }}</td>
         </tr>
         {% endfor %}
         {% else %}
@@ -74,6 +74,6 @@
         {% endif %}
     </ul>
     <!-- 페이징처리 끝 -->
-    <a href="{% url 'pybo:question_create' %}" class="btn btn-primary">질문 등록하기</a> <!-- GET방식 -->
+    <a href="{% url 'pybo:question_create' %}" class="btn common_btn btn-success">질문 등록하기</a> <!-- GET방식 -->
 </div>
 {% endblock %}
