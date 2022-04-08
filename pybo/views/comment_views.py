@@ -133,3 +133,15 @@ def comment_vote_answer(request, comment_id):
     else:
         comment.voter.add(request.user)
     return redirect('pybo:detail', question_id=comment.answer.question_id)
+
+@login_required(login_url='common:login')
+def comment_hate_question(request, comment_id):
+    comment = get_object_or_404(Comment, pk=comment_id)
+    comment.hater.add(request.user)
+    return redirect('pybo:detail', question_id=comment.question_id)
+
+@login_required(login_url='common:login')
+def comment_hate_answer(request, comment_id):
+    comment = get_object_or_404(Comment, pk=comment_id)
+    comment.hater.add(request.user)
+    return redirect('pybo:detail', question_id=comment.answer.question_id)

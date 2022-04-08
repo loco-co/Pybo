@@ -29,4 +29,4 @@ class Comment(models.Model):
     question = models.ForeignKey(Question, null=True, blank=True, on_delete=models.CASCADE)
     answer = models.ForeignKey(Answer, null=True, blank=True, on_delete=models.CASCADE)
     voter = models.ManyToManyField(User, related_name='voter_comment')
-    vote_count = models.IntegerField(default=0)
+    hater = models.ManyToManyField(User, related_name='hater_comment')

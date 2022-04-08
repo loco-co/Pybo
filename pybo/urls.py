@@ -49,4 +49,9 @@ urlpatterns = [
          comment_views.comment_vote_question, name='comment_vote_question'),
     path('comment/vote/answer/<int:comment_id>/',
          comment_views.comment_vote_answer, name='comment_vote_answer'),
+
+    path('comment/hate/question/<int:comment_id>/',
+         comment_views.comment_hate_question, name='comment_hate_question'),
+    path('comment/hate/answer/<int:comment_id>/',
+         comment_views.comment_hate_answer, name='comment_hate_answer'),
 ]

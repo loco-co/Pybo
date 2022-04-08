@@ -1,5 +1,6 @@
 <!-- static 폴더에 style.css파일 -->
 {% extends 'base.html' %}
+{% load pybo_filter %}
 {% block content %}
 <div class="container my-3">
     <!-- 사용자 오류 표시 -->
@@ -19,45 +20,55 @@
                 {% if question.modify_date %}
                 <div class="badge badge-light p-2 text-left mx-3">
                     <div class="mb-2">modified at</div>
-                    <div>{{ question.modify_date }}</div>
+                    <small>{{ question.modify_date }}</small>
                 </div>
                 {% endif %}
                 <div class="badge badge-light p-2 text-left">
-                    <div class="mb-2">{{ question.author.username }}</div>
-                    <div>{{ question.create_date }}</div>
+                    <div class="mb-2">작성자: {{ question.author.username }}</div>
+                    <small>{{ question.create_date }}</small>
                 </div>
             </div>
-            <div class="my-3">
+            <div class="my-3 row justify-content-between">
+                <div class="col-2">
                 <a href="javascript:void(0)" data-uri="{% url 'pybo:question_vote' question.id %}"
                    class="recommend btn btn-sm btn-outline-secondary">추천
-                <span class="badge rounded-pill">{{ question.voter.count }}</span></a>
-                {% if request.user == question.author %}
+                <span class="badge rounded-pill">+{{ question.voter.count }}</span></a>
+                </div>
+                <div class="col-2">
+                    {% if request.user == question.author %}
                 <a href="{% url 'pybo:question_modify' question.id %}"
                    class="btn btn-sm btn-outline-secondary">수정</a>
                 <a href="#" class="delete btn btn-sm btn-outline-secondary"
                    data-uri="{% url 'pybo:question_delete' question.id %}">삭제</a>
                 {% endif %}
+                </div>
             </div>
             <!-- 질문 댓글 Start -->
             {% if question.comment_set.count > 0 %}
             <div class="mt-3">
             {% for comment in question.comment_set.all %} <!-- 등록한 댓글을 출력 -->
-                <div class="comment py-2 text-muted"> <!-- 댓글 각각에 comment 스타일 지정 -->
-                    <span style="white-space: pre-line;">{{ comment.content }}</span>
-                    <span>
-                        - {{ comment.author }}, {{comment.create_date }}
-                        {% if comment.modify_date %}
-                        (수정:{{ comment.modify_date }})
+                <div class="row justify-content-between">
+                    <div class="comment py-2 text-muted col-11"> <!-- 댓글 각각에 comment 스타일 지정 -->
+                        <span style="white-space: pre-line;">{{ comment.content }}</span>
+                        <span>
+                            - {{ comment.author }}, {{comment.create_date }}
+                            {% if comment.modify_date %}
+                            (수정:{{ comment.modify_date }})
+                            {% endif %}
+                        </span>
+                        <span class="badge">{{ comment.voter.count|sub:comment.hater.count }}</span>
+                        <a href="javascript:void(0)" data-uri="{% url 'pybo:comment_vote_question' comment.id %}"
+                            class="recommend badge">👍🏻</a>
+                        <a href="javascript:void(0)" data-uri="{% url 'pybo:comment_hate_question' comment.id %}"
+                            class="hate badge">👎🏻</a>
+                    </div>
+                    <div class="col-1 comment pt-2">
+                        {% if request.user == comment.author %}
+                        <a href="{% url 'pybo:comment_modify_question' comment.id %}" class="small">수정</a>,
+                        <a href="#" class="small delete"
+                            data-uri="{% url 'pybo:comment_delete_question' comment.id %}">삭제</a>
                         {% endif %}
-                    </span>
-                    <span class="badge">+{{ comment.voter.count }}</span>
-                    <a href="javascript:void(0)" data-uri="{% url 'pybo:comment_vote_question' comment.id %}"
-                    class="recommend badge">추천</a>
-                    {% if request.user == comment.author %}
-                    <a href="{% url 'pybo:comment_modify_question' comment.id %}" class="small">수정</a>,
-                    <a href="#" class="small delete"
-                       data-uri="{% url 'pybo:comment_delete_question' comment.id %}">삭제</a>
-                    {% endif %}
+                    </div>
                 </div>
             {% endfor %}
             </div>
@@ -78,29 +89,34 @@
                 {% if answer.modify_date %}
                 <div class="badge badge-light p-2 text-left mx-3">
                     <div class="mb-2">modified at</div>
-                    <div>{{ answer.modify_date }}</div>
+                    <small>{{ answer.modify_date }}</small>
                 </div>
                 {% endif %}
                 <div class="badge badge-light p-2 text-left">
-                    <div class="mb-2">{{ answer.author.username }}</div>
-                    <div>{{ answer.create_date }}</div>
+                    <div class="mb-2">작성자: {{ answer.author.username }}</div>
+                    <small>{{ answer.create_date }}</small>
                 </div>
             </div>
-            <div class="my-3">
+            <div class="my-3 row justify-content-between">
+                <div class="col-2">
                 <a href="javascript:void(0)" data-uri="{% url 'pybo:answer_vote' answer.id %}"
                class="recommend btn btn-sm btn-outline-secondary">추천
-                <span class="badge rounded-pill">{{ answer.voter.count }}</span></a>
+                <span class="badge rounded-pill">+{{ answer.voter.count }}</span></a>
+                </div>
+                <div class="col-2">
                 {% if request.user == answer.author %}
                 <a href="{% url 'pybo:answer_modify' answer.id %}"
                    class="btn btn-sm btn-outline-secondary">수정</a>
                 <a href="#" class="delete btn btn-sm btn-outline-secondary"
                    data-uri="{% url 'pybo:answer_delete' answer.id %}">삭제</a>
                 {% endif %}
+                </div>
             </div>
             {% if answer.comment_set.count > 0 %}
             <div class="mt-3">
                 {% for comment in answer.comment_set.all %}
-                    <div class="comment py-2 text-muted">
+                <div class="row justify-content-between">
+                    <div class="comment py-2 text-muted col-11">
                         <span style="white-space: pre-line;">{{ comment.content }}</span>
                         <span>
                             - {{ comment.author }}, {{ comment.create_date }}
@@ -108,15 +124,20 @@
                             (수정:{{ comment.modify_date }})
                             {% endif %}
                         </span>
-                        <span class="badge rounded-pill">+{{ comment.voter.count }}</span>
+                        <span class="badge rounded-pill">{{ comment.voter.count|sub:comment.hater.count }}</span>
                         <a href="javascript:void(0)" data-uri="{% url 'pybo:comment_vote_answer' comment.id %}"
-                            class="recommend badge">추천</a>
+                            class="recommend badge">👍🏻</a>
+                        <a href="javascript:void(0)" data-uri="{% url 'pybo:comment_hate_answer' comment.id %}"
+                            class="hate badge">👎🏻</a>
+                    </div>
+                    <div class="col-1 comment pt-2">
                         {% if request.user == comment.author %}
                         <a href="{% url 'pybo:comment_modify_answer' comment.id %}" class="small">수정</a>,
                         <a href="#" class="small delete"
                            data-uri="{% url 'pybo:comment_delete_answer' comment.id %}">삭제</a>
                         {% endif %}
                     </div>
+                </div>
                 {% endfor %}
             </div>
             {% endif %}
@@ -156,6 +177,7 @@
             }
         });
     });
+
 const recommend_elements = document.getElementsByClassName("recommend");
 Array.from(recommend_elements).map((element) => {
     element.addEventListener('click', function() {
@@ -165,5 +187,11 @@ Array.from(recommend_elements).map((element) => {
     });
 });
 
+const hate_elements = document.getElementsByClassName("hate");
+Array.from(hate_elements).map((element) => {
+    element.addEventListener('click', function() {
+        location.href = this.dataset.uri;
+    });
+});
 </script>
 {% endblock %}
