@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404, redirect, resolve_url
 from django.utils import timezone
 
 from ..forms import AnswerForm
@@ -21,7 +21,8 @@ def answer_create(request, question_id):
             answer.create_date = timezone.now()
             answer.question = question
             answer.save()  # answer 모델의 content를 get해온다
-            return redirect('pybo:detail', question_id=question_id)  # redirect는 페이지를 다시 로드하는 함수
+            return redirect('{}#answer_{}'.format(
+                resolve_url('pybo:detail', question_id=question_id), answer.id))  # redirect는 페이지를 다시 로드하는 함수
     else:
         form = AnswerForm()
     context = {'question': question, 'form': form}
@@ -45,7 +46,8 @@ def answer_modify(request, answer_id):
             answer = form.save(commit=False)
             answer.modify_date = timezone.now()
             answer.save()
-            return redirect('pybo:detail', question_id=answer.question.id)
+            return redirect('{}#answer_{}'.format(
+                resolve_url('pybo:detail', question_id=answer.question.id), answer.id))
     else:
         form = AnswerForm(instance=answer)
     context = {'answer': answer, 'form': form}
@@ -70,4 +72,5 @@ def answer_vote(request, answer_id):
         messages.error(request, '본인이 작성한 글은 추천할수 없습니다')
     else:
         answer.voter.add(request.user)
-    return redirect('pybo:detail', question_id=answer.question.id)
+    return redirect('{}#answer_{}'.format(
+        resolve_url('pybo:detail', question_id=answer.question.id), answer.id))

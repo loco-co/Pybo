@@ -9,6 +9,11 @@
     white-space: nowrap;
 }
 
+.text-content {
+    white-space: nowrap;
+    overflow: hidden;
+}
+
 .pagination > li > a {
     background-color: white;
     color: #8fd19e;

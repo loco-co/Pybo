@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404, redirect, resolve_url
 from django.utils import timezone
 
 from ..forms import CommentForm
@@ -75,7 +75,8 @@ def comment_create_answer(request, answer_id):
             comment.create_date = timezone.now()
             comment.answer = answer
             comment.save()
-            return redirect('pybo:detail', question_id=comment.answer.question.id)
+            return redirect('{}#answer_{}'.format(
+                resolve_url('pybo:detail', question_id=comment.answer.question_id), comment.answer.id))
     else:
         form = CommentForm()
     context = {'form': form}
@@ -97,7 +98,8 @@ def comment_modify_answer(request, comment_id):
             comment = form.save(commit=False)
             comment.modify_date = timezone.now()
             comment.save()
-            return redirect('pybo:detail', question_id=comment.answer.question.id)
+            return redirect('{}#answer_{}'.format(
+                resolve_url('pybo:detail', question_id=comment.answer.question_id), comment.answer.id))
     else:
         form = CommentForm(instance=comment)
     context = {'form': form}
@@ -132,7 +134,8 @@ def comment_vote_answer(request, comment_id):
         messages.error(request, '본인이 작성한 댓글은 추천할 수 없습니다')
     else:
         comment.voter.add(request.user)
-    return redirect('pybo:detail', question_id=comment.answer.question_id)
+    return redirect('{}#answer_{}'.format(
+        resolve_url('pybo:detail', question_id=comment.answer.question_id), comment.answer.id))
 
 @login_required(login_url='common:login')
 def comment_hate_question(request, comment_id):
@@ -144,4 +147,5 @@ def comment_hate_question(request, comment_id):
 def comment_hate_answer(request, comment_id):
     comment = get_object_or_404(Comment, pk=comment_id)
     comment.hater.add(request.user)
-    return redirect('pybo:detail', question_id=comment.answer.question_id)
+    return redirect('{}#answer_{}'.format(
+        resolve_url('pybo:detail', question_id=comment.answer.question_id), comment.answer.id))

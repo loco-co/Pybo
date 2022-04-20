@@ -29,12 +29,12 @@
                 </div>
             </div>
             <div class="my-3 row justify-content-between">
-                <div class="col-2">
+                <div class="col-3">
                 <a href="javascript:void(0)" data-uri="{% url 'pybo:question_vote' question.id %}"
                    class="recommend btn btn-sm btn-outline-secondary">추천
                 <span class="badge rounded-pill">+{{ question.voter.count }}</span></a>
                 </div>
-                <div class="col-2">
+                <div class="d-grid mx-3">
                     {% if request.user == question.author %}
                 <a href="{% url 'pybo:question_modify' question.id %}"
                    class="btn btn-sm btn-outline-secondary">수정</a>
@@ -48,12 +48,13 @@
             <div class="mt-3">
             {% for comment in question.comment_set.all %} <!-- 등록한 댓글을 출력 -->
                 <div class="row justify-content-between">
-                    <div class="comment py-2 text-muted col-11"> <!-- 댓글 각각에 comment 스타일 지정 -->
-                        <span style="white-space: pre-line;">{{ comment.content }}</span>
+                    <div class="comment py-2 text-muted col-10"> <!-- 댓글 각각에 comment 스타일 지정 -->
+                        <span style="white-space: pre-line;">{{ comment.author }} : {{ comment.content }}</span>
                         <span>
-                            - {{ comment.author }}, {{comment.create_date }}
                             {% if comment.modify_date %}
-                            (수정:{{ comment.modify_date }})
+                            - {{ comment.modify_date }}, 수정됨
+                            {% else %}
+                            - {{comment.create_date }}
                             {% endif %}
                         </span>
                         <span class="badge">{{ comment.voter.count|sub:comment.hater.count }}</span>
@@ -62,7 +63,7 @@
                         <a href="javascript:void(0)" data-uri="{% url 'pybo:comment_hate_question' comment.id %}"
                             class="hate badge">👎🏻</a>
                     </div>
-                    <div class="col-1 comment pt-2">
+                    <div class="col-2 comment pt-2 text-content">
                         {% if request.user == comment.author %}
                         <a href="{% url 'pybo:comment_modify_question' comment.id %}" class="small">수정</a>,
                         <a href="#" class="small delete"
@@ -82,6 +83,7 @@
     </div>
     <h5 class="border-bottom my-3 py-2">{{ question.answer_set.count }}개의 답변이 있습니다.</h5>
     {% for answer in question.answer_set.all %}
+    <a id="answer_{{ answer.id }}"></a>
     <div class="card my-3">
         <div class="card-body">
             <div class="card-text" style="white-space: pre-line;">{{ answer.content }}</div>
@@ -98,12 +100,12 @@
                 </div>
             </div>
             <div class="my-3 row justify-content-between">
-                <div class="col-2">
+                <div class="col-3">
                 <a href="javascript:void(0)" data-uri="{% url 'pybo:answer_vote' answer.id %}"
                class="recommend btn btn-sm btn-outline-secondary">추천
                 <span class="badge rounded-pill">+{{ answer.voter.count }}</span></a>
                 </div>
-                <div class="col-2">
+                <div class="d-grid mx-3">
                 {% if request.user == answer.author %}
                 <a href="{% url 'pybo:answer_modify' answer.id %}"
                    class="btn btn-sm btn-outline-secondary">수정</a>
@@ -112,16 +114,19 @@
                 {% endif %}
                 </div>
             </div>
+            <!-- 답글 댓글 start -->
             {% if answer.comment_set.count > 0 %}
             <div class="mt-3">
                 {% for comment in answer.comment_set.all %}
+                <a id="comment_{{ comment.id }}"></a>
                 <div class="row justify-content-between">
-                    <div class="comment py-2 text-muted col-11">
-                        <span style="white-space: pre-line;">{{ comment.content }}</span>
+                    <div class="comment py-2 text-muted col-10">
+                        <span style="white-space: pre-line;">{{ comment.author }} : {{ comment.content }}</span>
                         <span>
-                            - {{ comment.author }}, {{ comment.create_date }}
                             {% if comment.modify_date %}
-                            (수정:{{ comment.modify_date }})
+                            - {{ comment.modify_date }}, 수정됨
+                            {% else %}
+                            - {{comment.create_date }}
                             {% endif %}
                         </span>
                         <span class="badge rounded-pill">{{ comment.voter.count|sub:comment.hater.count }}</span>
@@ -130,7 +135,7 @@
                         <a href="javascript:void(0)" data-uri="{% url 'pybo:comment_hate_answer' comment.id %}"
                             class="hate badge">👎🏻</a>
                     </div>
-                    <div class="col-1 comment pt-2">
+                    <div class="col-2 comment pt-2 text-content">
                         {% if request.user == comment.author %}
                         <a href="{% url 'pybo:comment_modify_answer' comment.id %}" class="small">수정</a>,
                         <a href="#" class="small delete"
@@ -141,6 +146,7 @@
                 {% endfor %}
             </div>
             {% endif %}
+            <!-- 답글 댓글 end -->
             <div>
                 <a href="{% url 'pybo:comment_create_answer' answer.id %}"
                    class="small" style="text-decoration: none;"><small>댓글 추가 ..</small></a>
@@ -160,7 +166,8 @@
             {% endfor %}
         </div>
         {% endif %}
-        <div class="form-group">
+        <div class="mb-3">
+            <label for="content" class="form-label">답변내용</label>
             <textarea {% if not user.is_authenticated %}disabled{% endif %}
                       name="content" id="content" class="form-control" rows="10"></textarea>
         </div>
