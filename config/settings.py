@@ -25,7 +25,7 @@ SECRET_KEY = '(5qv$uh1ov!djf1qng_vs@2%-+o!%i%sr+$7$wjxu&ey4u04&-'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['applepypy.herokuapp.com']
 
 
 # Application definition
