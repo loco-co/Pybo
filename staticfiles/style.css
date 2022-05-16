@@ -1,0 +1,51 @@
+/* 장고에서 css가 안 먹힐때는 force refresh */
+
+.comment {
+    border-top:dotted 1px #ddd;
+    font-size:0.7em;
+}
+
+.table_name {
+    white-space: nowrap;
+}
+
+.text-content {
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.pagination > li > a {
+    background-color: white;
+    color: #8fd19e;
+}
+
+.pagination > li > a:focus,
+.pagination > li > a:hover,
+.pagination > li > span:focus,
+.pagination > li > span:hover {
+    color: #8fd19e;
+    background-color: #eee;
+    border-color: #ddd;
+}
+
+.pagination > .active > a {
+    color: white;
+    background-color: #8fd19e !Important;
+    border: solid 1px #8fd19e !Important;
+}
+
+.pagination > .active > a:hover {
+    background-color: #8fd19e !Important;
+    border: solid 1px #8fd19e;
+}
+
+.common_btn {
+    background-color: #8fd19e;
+    border: solid 1px #8fd19e;
+    color: black;
+}
+
+.common_btn:hover {
+    background-color: #8fd19e;
+    border: solid 1px #8fd19e;
+}
